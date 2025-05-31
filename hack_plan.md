@@ -5,6 +5,11 @@
 
 **Core Value Proposition**: Every person becomes a CEO with access to specialized AI agents (CTO, CMO, CFO, COO, COS) to build and scale their company.
 
+## Development Strategy
+**Phase 1**: Use Mastra's built-in playground for rapid agent development and testing
+**Phase 2**: Build custom executive dashboard frontend for demo presentation
+**Advantage**: Leverage Mastra's development tools while creating a polished user experience
+
 ## System Architecture & Data Flow
 
 ### Core Inputs & Outputs
@@ -50,114 +55,124 @@
 
 ## 6-Hour Timeline Breakdown
 
-### Hour 1: Setup & Architecture (0-60 min)
-**Goals**: Environment setup and core architecture design
+### Hour 1: Mastra Project Setup (0-60 min)
+**Goals**: Initialize Mastra project with proper structure and Google Gemini integration
 
 **Tasks**:
-- Set up Mastra development environment
-- Create project structure and initialize repositories
-- Design the agent hierarchy and communication flow
-- Define the core data models (Company, User, Agent interactions)
+- Run `npx create-mastra@latest` to create aiCEO project
+- Select components: Agents, Tools, Workflows
+- Choose Google Gemini as LLM provider
+- Set up `GOOGLE_GENERATIVE_AI_API_KEY` in environment
+- Explore generated project structure and example agents
+- Test default weather agent in Mastra playground (`mastra dev`)
+- Review generated code to understand Mastra patterns
 
-**Deliverable**: Working development environment with basic project structure
+**Deliverable**: Working Mastra development environment with playground at `localhost:4111`
 
-### Hour 2: Core Agent Framework (60-120 min)
-**Goals**: Build the foundational agent system with task delegation
-
-**Tasks**:
-- Implement the base Agent class using Mastra's agent framework
-- Create the COS (Chief of Staff) agent as the primary orchestrator
-- Design the prompt templates for each C-suite role
-- Implement CEO ↔ COS communication interface
-- Build task creation and management system
-- Set up conversation memory and context management
-- Create task output templates with clear action items
-
-**Deliverable**: Functional COS agent with CEO chat interface and task delegation system
-
-### Hour 3: Specialized Agents Implementation (120-180 min)
-**Goals**: Build out the specialized C-suite agents with task creation capabilities
+### Hour 2: Core Agent Framework & COS Development (60-120 min)
+**Goals**: Build the foundational agent system with COS orchestrator
 
 **Tasks**:
-- **CTO Agent**: 
-  - Input: Business idea, technical requirements, budget constraints
-  - Output: Technical architecture, development tasks, technology recommendations
-  - Task Examples: "Set up AWS account", "Create database schema", "Interview senior developer"
+- Create COS (Chief of Staff) agent as primary orchestrator in `src/mastra/agents/cos.ts`
+- Design COS prompt template for CEO communication and agent coordination
+- Implement task creation framework within agent responses
+- Create conversation memory and context management
+- Build task output templates with structured action items
+- Test COS agent in Mastra playground with sample business ideas
+- Refine COS responses for clarity and actionability
+
+**Deliverable**: Functional COS agent tested in playground with task generation capabilities
+
+### Hour 3: Specialized C-Suite Agents (120-180 min)
+**Goals**: Build specialized agents with domain expertise and task creation
+
+**Tasks**:
+- **CTO Agent** (`src/mastra/agents/cto.ts`): 
+  - Technical architecture analysis and development task creation
+  - Tools: technology research, cost estimation, timeline planning
   
-- **CMO Agent**: 
-  - Input: Target market, brand vision, marketing budget
-  - Output: Marketing strategy, brand guidelines, campaign tasks
-  - Task Examples: "Design logo with [specifications]", "Write blog post about [topic]", "Contact influencer [name]"
+- **CMO Agent** (`src/mastra/agents/cmo.ts`): 
+  - Marketing strategy and campaign task generation
+  - Tools: market research, brand positioning, content planning
   
-- **CFO Agent**: 
-  - Input: Revenue model, funding needs, financial projections
-  - Output: Financial plan, funding strategy, financial management tasks
-  - Task Examples: "Open business bank account", "Contact accountant", "Prepare investor deck slide [X]"
+- **CFO Agent** (`src/mastra/agents/cfo.ts`): 
+  - Financial planning and funding strategy tasks
+  - Tools: financial modeling, investor research, compliance requirements
   
-- **COO Agent**: 
-  - Input: Business operations, team structure, process requirements
-  - Output: Operations plan, hiring strategy, operational tasks
-  - Task Examples: "Interview project manager candidate", "Set up project management tool", "Create employee handbook"
+- **COO Agent** (`src/mastra/agents/coo.ts`): 
+  - Operations planning and team building tasks
+  - Tools: process design, hiring strategies, vendor management
 
-**Deliverable**: All 5 agents with specialized task creation capabilities
+- Test each agent individually in playground
+- Create sample prompts for each agent domain
+- Validate task output quality and specificity
 
-### Hour 4: Integration & Orchestration (180-240 min)
-**Goals**: Connect agents and build the executive workflow with OKR/KPI tracking
+**Deliverable**: All 5 specialized agents with tested task creation capabilities
+
+### Hour 4: Agent Integration & Business Workflows (180-240 min)
+**Goals**: Create coordinated workflows and business planning system
 
 **Tasks**:
-- Implement COS orchestration logic to coordinate between agents
-- Create business planning workflows (idea → analysis → execution plan)
-- Build inter-agent communication and data sharing
-- Implement OKR generation and tracking system
-- Create KPI dashboard with key business metrics
-- Add task prioritization and dependency management
-- Implement feedback loops between CEO directives and agent outputs
+- Implement business planning workflow in `src/mastra/workflows/business-plan.ts`
+- Create agent orchestration logic for multi-agent coordination
+- Build OKR generation system based on business goals
+- Implement KPI identification and tracking framework
+- Create inter-agent communication patterns
+- Add task prioritization and dependency logic
+- Test full business planning workflow in playground
+- Refine agent coordination and output consistency
 
-**Deliverable**: Integrated agent ecosystem with comprehensive task management and KPI tracking
+**Deliverable**: Integrated agent ecosystem with comprehensive business planning workflow
 
-### Hour 5: User Interface & Experience (240-300 min)
-**Goals**: Build the executive CEO dashboard and task management interface
+### Hour 5: Custom Executive Dashboard Frontend (240-300 min)
+**Goals**: Build the CEO-focused frontend interface
 
 **Tasks**:
-- Create executive-style CEO dashboard with:
-  - Real-time OKR progress tracking
-  - KPI visualization (revenue, growth, milestones)
-  - Task queue with priority levels
-  - Agent status and recent outputs
-  - Business health metrics
-- Implement COS chat interface for direct CEO communication
-- Build task management system with:
-  - Task cards with clear instructions
-  - Progress tracking and completion status
-  - Task assignment and scheduling
-  - Dependency visualization
-- Add business plan export and sharing features
-- Create agent recommendation summaries
+- Create Next.js project structure for executive dashboard
+- Install Mastra Client SDK: `npm install @mastra/client-js`
+- Build core dashboard components:
+  - CEO ↔ COS chat interface with real-time communication
+  - Task management board with priority levels and progress tracking
+  - OKR dashboard with progress visualization
+  - KPI metrics display with key business indicators
+  - Agent status panel showing recent outputs
+- Implement Mastra API integration using client SDK
+- Style with executive-focused design (professional, data-rich)
+- Test integration with Mastra agents running on `localhost:4111`
 
-**Deliverable**: Comprehensive CEO dashboard with task management and KPI tracking
+**Deliverable**: Professional CEO dashboard with full Mastra integration
 
 ### Hour 6: Demo Preparation & Polish (300-360 min)
-**Goals**: Prepare compelling demo and final touches
+**Goals**: Finalize demo experience and presentation materials
 
 **Tasks**:
-- Create 2-3 compelling demo scenarios with different business ideas
-- Polish the UI/UX for presentation
-- Add sample data and realistic agent responses
-- Prepare demo script and key talking points
-- Test the full user journey and fix critical bugs
-- Create presentation materials
+- Create 3 compelling demo scenarios:
+  1. **Sustainable Food Delivery**: Complete business plan with 45+ tasks
+  2. **AI Tutoring Platform**: Full strategic analysis with OKRs
+  3. **Artisan Marketplace**: Operational roadmap with KPI tracking
+- Polish dashboard UI/UX for presentation
+- Prepare demo script highlighting key differentiators
+- Test full user journey from idea input to task execution
+- Create backup responses in case of API issues
+- Prepare presentation slides and talking points
+- Final testing and bug fixes
 
-**Deliverable**: Polished demo-ready application with compelling use cases
+**Deliverable**: Polished demo-ready application with compelling business scenarios
 
 ## Technical Architecture
 
+### Development Environment
+1. **Mastra Core**: Agent framework with built-in playground
+2. **Development Server**: `localhost:4111` with REST API and testing interface
+3. **Custom Frontend**: Next.js dashboard connecting to Mastra server
+4. **Client Integration**: Type-safe API calls using `@mastra/client-js`
+
 ### Core Components
-1. **Mastra Agent Framework**: Powering all AI agents
-2. **Agent Orchestrator (COS)**: Central coordination and CEO communication
-3. **Specialized Agents**: CTO, CMO, CFO, COO with domain expertise
-4. **Task Management System**: Centralized task creation, tracking, and execution
-5. **OKR/KPI Dashboard**: Executive metrics and progress tracking
-6. **CEO Interface**: Communication hub and strategic oversight
+1. **Agent Framework**: 5 specialized C-suite agents
+2. **Workflow Engine**: Business planning and task coordination
+3. **Task Management**: Structured action item generation
+4. **Executive Dashboard**: CEO-focused interface with real-time updates
+5. **API Integration**: Seamless connection between frontend and agents
 
 ### Data Models
 
@@ -220,10 +235,11 @@
 5. **Practical Output**: Tasks are immediately executable without additional interpretation
 
 ## Risk Mitigation
-- **Backup Plan**: If agent integration fails, focus on COS + 2 agents
+- **Playground Safety**: Use Mastra's testing environment for agent validation
+- **API Backup**: Pre-generated responses as fallback for live demo
 - **Simplified Scope**: Core MVP is COS orchestrating business plan generation
-- **Demo Safety**: Pre-generated responses as fallback for live demo
-- **Time Management**: Prioritize core functionality over advanced features
+- **Time Management**: Prioritize agent logic in playground, then dashboard polish
+- **Frontend Fallback**: Static mockups if real-time integration fails
 
 ## Key Differentiators
 1. **Executive-First Design**: Built for CEO-level strategic oversight
@@ -231,7 +247,7 @@
 3. **Real-time Strategic Communication**: Direct CEO ↔ COS dialogue capability
 4. **Comprehensive Business Intelligence**: OKRs, KPIs, and progress tracking
 5. **Manual Execution Bridge**: Clear tasks for human execution until MCP integration
-6. **Scalable Task Management**: Handles complex multi-agent coordination
+6. **Professional Development Tools**: Leverage Mastra's built-in testing and API capabilities
 
 ## Post-Hackathon Roadmap
 - Advanced agent personalities and expertise
@@ -239,3 +255,4 @@
 - Multi-company management for serial entrepreneurs
 - Industry-specific agent specializations
 - Community features for entrepreneur networking
+- Enhanced workflow automation and MCP integrations
