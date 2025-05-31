@@ -1,5 +1,6 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
+import { simpleTaskStorage } from '../storage/simple-task-storage';
 
 export const runBusinessPlanningTool = createTool({
   id: 'run-complete-business-planning',
@@ -26,6 +27,8 @@ export const runBusinessPlanningTool = createTool({
       estimated_total_hours: z.number(),
       success_probability: z.string()
     }),
+    tasks_saved_to_database: z.boolean(),
+    database_task_count: z.number(),
     next_immediate_actions: z.array(z.string()),
     full_results_available: z.boolean()
   }),
@@ -61,6 +64,25 @@ export const runBusinessPlanningTool = createTool({
         const metrics = result.result.integration_summary;
         const coordination = result.result.task_coordination;
         
+        // Save tasks to database
+        let tasksSaved = false;
+        let taskCount = 0;
+        
+        try {
+          const runId = `run_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          simpleTaskStorage.saveTasks(business_idea, result.result, runId);
+          tasksSaved = true;
+          
+          // Get the actual count of saved tasks
+          const savedTasks = simpleTaskStorage.getTasksByBusinessIdea(business_idea);
+          taskCount = savedTasks.length;
+          
+          console.log(`✅ Saved ${taskCount} tasks to database for "${business_idea}"`);
+        } catch (dbError) {
+          console.error('Database save error:', dbError);
+          tasksSaved = false;
+        }
+        
         return {
           workflow_status: 'SUCCESS',
           execution_summary: `Complete business planning workflow executed successfully! Engaged ${metrics.total_specialists_engaged} specialists, generated ${metrics.total_actionable_tasks} actionable tasks with ${metrics.success_probability} success probability.`,
@@ -73,6 +95,8 @@ export const runBusinessPlanningTool = createTool({
             estimated_total_hours: metrics.estimated_total_hours,
             success_probability: metrics.success_probability
           },
+          tasks_saved_to_database: tasksSaved,
+          database_task_count: taskCount,
           next_immediate_actions: coordination.next_immediate_actions,
           full_results_available: true
         };
@@ -94,6 +118,8 @@ export const runBusinessPlanningTool = createTool({
           estimated_total_hours: 0,
           success_probability: 'Failed'
         },
+        tasks_saved_to_database: false,
+        database_task_count: 0,
         next_immediate_actions: ['Debug workflow execution', 'Check system configuration'],
         full_results_available: false
       };
