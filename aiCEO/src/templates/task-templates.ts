@@ -1,7 +1,7 @@
 // Task creation templates for C-suite agents
 // Ensures consistent, actionable task generation across all domains
 
-import { AgentTaskTemplate, AgentType } from '../types/index.js'
+import { AgentTaskTemplate, AgentType } from '../types/index'
 
 // Base task template with common fields
 const createTaskTemplate = (

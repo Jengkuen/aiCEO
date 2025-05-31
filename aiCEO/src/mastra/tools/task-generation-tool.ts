@@ -1,7 +1,20 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
-import { AgentTaskTemplate, AgentType } from '../../types/index.js'
-import { generateContextualTasks, getTaskTemplatesByAgent } from '../../templates/task-templates.js'
+
+// Simplified types for self-contained tools
+type AgentType = 'COS' | 'CTO' | 'CMO' | 'CFO' | 'COO'
+
+interface SimpleTask {
+  title: string
+  description: string
+  category: 'setup' | 'research' | 'development' | 'marketing' | 'operations' | 'legal' | 'financial'
+  estimatedHours: number
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  requiredSkills: string[]
+  dependencies: string[]
+  deliverables: string[]
+  successCriteria: string[]
+}
 
 // Schema for task generation input
 const taskGenerationInputSchema = z.object({
@@ -39,6 +52,39 @@ const taskOutputSchema = z.object({
   }).describe('Count of tasks by priority level')
 })
 
+// Simple task generation without external dependencies
+function generateSimpleTasks(agentType: AgentType, businessContext: any): SimpleTask[] {
+  const baseTasks: SimpleTask[] = []
+  
+  if (agentType === 'CTO') {
+    baseTasks.push({
+      title: 'Technology Stack Selection',
+      description: `Research and select appropriate technology stack for ${businessContext.industry} business`,
+      category: 'research',
+      estimatedHours: 8,
+      priority: 'high',
+      requiredSkills: ['Technology Research', 'Architecture Planning'],
+      dependencies: [],
+      deliverables: ['Technology comparison report', 'Stack recommendation'],
+      successCriteria: ['Technologies selected based on requirements']
+    })
+  } else if (agentType === 'CMO') {
+    baseTasks.push({
+      title: 'Market Research and Positioning',
+      description: `Conduct market analysis for ${businessContext.industry} sector`,
+      category: 'research',
+      estimatedHours: 12,
+      priority: 'high',
+      requiredSkills: ['Market Research', 'Competitive Analysis'],
+      dependencies: [],
+      deliverables: ['Market analysis report', 'Positioning strategy'],
+      successCriteria: ['Target market clearly defined']
+    })
+  }
+  
+  return baseTasks
+}
+
 export const taskGenerationTool = createTool({
   id: 'generate-tasks',
   description: 'Generate structured, actionable tasks based on business idea and agent specialization',
@@ -48,14 +94,8 @@ export const taskGenerationTool = createTool({
     const { businessIdea, agentType, businessContext } = context
 
     try {
-      // Generate contextual tasks using our templates
-      const tasks = generateContextualTasks(agentType as AgentType, {
-        idea: businessIdea,
-        industry: businessContext.industry,
-        stage: businessContext.stage,
-        budget: businessContext.budget,
-        timeline: businessContext.timeline
-      })
+      // Generate simplified tasks
+      const tasks = generateSimpleTasks(agentType as AgentType, businessContext)
 
       // Calculate metrics
       const totalEstimatedHours = tasks.reduce((sum, task) => sum + task.estimatedHours, 0)
@@ -90,7 +130,7 @@ export const taskGenerationTool = createTool({
   }
 })
 
-// OKR Generation Tool
+// Simplified OKR Generation Tool
 const okrGenerationInputSchema = z.object({
   businessIdea: z.string().describe('The business idea to create OKRs for'),
   businessContext: z.object({
@@ -125,102 +165,107 @@ export const okrGenerationTool = createTool({
   inputSchema: okrGenerationInputSchema,
   outputSchema: okrOutputSchema,
   execute: async ({ context }) => {
-    const { businessIdea, businessContext, strategicPriorities } = context
+    try {
+      const { businessIdea, businessContext, strategicPriorities } = context
 
-    // Template-based OKR generation based on business context
-    const objectives = []
+      // Simplified template-based OKR generation
+      const objectives = []
 
-    // Revenue/Growth Objective (Universal)
-    objectives.push({
-      objective: "Achieve Sustainable Revenue Growth",
-      description: `Establish and grow revenue streams for the ${businessContext.industry} business`,
-      keyResults: [
-        {
-          description: "Monthly Recurring Revenue (MRR)",
-          targetValue: businessContext.budget ? Math.floor(businessContext.budget * 0.1) : 10000,
-          unit: "USD",
-          currentValue: 0
-        },
-        {
-          description: "Customer Acquisition",
-          targetValue: 100,
-          unit: "customers",
-          currentValue: 0
-        },
-        {
-          description: "Customer Retention Rate",
-          targetValue: 85,
-          unit: "percentage",
-          currentValue: 0
-        }
-      ],
-      targetDate: businessContext.timeline || "12 months",
-      priority: "critical" as const
-    })
+      // Revenue/Growth Objective (Universal)
+      objectives.push({
+        objective: "Achieve Sustainable Revenue Growth",
+        description: `Establish and grow revenue streams for the ${businessContext.industry} business`,
+        keyResults: [
+          {
+            description: "Monthly Recurring Revenue (MRR)",
+            targetValue: businessContext.budget ? Math.floor(businessContext.budget * 0.1) : 10000,
+            unit: "USD",
+            currentValue: 0
+          },
+          {
+            description: "Customer Acquisition",
+            targetValue: 100,
+            unit: "customers",
+            currentValue: 0
+          },
+          {
+            description: "Customer Retention Rate",
+            targetValue: 85,
+            unit: "percentage", 
+            currentValue: 0
+          }
+        ],
+        targetDate: businessContext.timeline || "12 months",
+        priority: "critical" as const
+      })
 
-    // Market Position Objective
-    objectives.push({
-      objective: "Establish Strong Market Position",
-      description: `Build brand recognition and competitive advantage in ${businessContext.industry}`,
-      keyResults: [
-        {
-          description: "Brand Awareness",
-          targetValue: 25,
-          unit: "percentage",
-          currentValue: 0
-        },
-        {
-          description: "Market Share",
-          targetValue: 5,
-          unit: "percentage",
-          currentValue: 0
-        },
-        {
-          description: "Customer Satisfaction Score",
-          targetValue: 4.5,
-          unit: "rating (1-5)",
-          currentValue: 0
-        }
-      ],
-      targetDate: businessContext.timeline || "18 months",
-      priority: "high" as const
-    })
+      // Market Position Objective
+      objectives.push({
+        objective: "Establish Strong Market Position",
+        description: `Build brand recognition and competitive advantage in ${businessContext.industry}`,
+        keyResults: [
+          {
+            description: "Brand Awareness",
+            targetValue: 25,
+            unit: "percentage",
+            currentValue: 0
+          },
+          {
+            description: "Market Share",
+            targetValue: 5,
+            unit: "percentage",
+            currentValue: 0
+          },
+          {
+            description: "Customer Satisfaction Score",
+            targetValue: 4.5,
+            unit: "rating (1-5)",
+            currentValue: 0
+          }
+        ],
+        targetDate: businessContext.timeline || "18 months",
+        priority: "high" as const
+      })
 
-    // Operational Excellence Objective
-    objectives.push({
-      objective: "Build Scalable Operations",
-      description: "Develop efficient, scalable operational processes and team structure",
-      keyResults: [
-        {
-          description: "Operational Efficiency",
-          targetValue: 90,
-          unit: "percentage",
-          currentValue: 0
-        },
-        {
-          description: "Team Size",
-          targetValue: 15,
-          unit: "employees",
-          currentValue: 1
-        },
-        {
-          description: "Process Automation",
-          targetValue: 75,
-          unit: "percentage",
-          currentValue: 0
-        }
-      ],
-      targetDate: businessContext.timeline || "15 months",
-      priority: "high" as const
-    })
+      // Operational Excellence Objective
+      objectives.push({
+        objective: "Build Scalable Operations",
+        description: "Develop efficient, scalable operational processes and team structure",
+        keyResults: [
+          {
+            description: "Operational Efficiency",
+            targetValue: 90,
+            unit: "percentage",
+            currentValue: 0
+          },
+          {
+            description: "Team Size",
+            targetValue: 15,
+            unit: "employees",
+            currentValue: 1
+          },
+          {
+            description: "Process Automation",
+            targetValue: 75,
+            unit: "percentage",
+            currentValue: 0
+          }
+        ],
+        targetDate: businessContext.timeline || "15 months",
+        priority: "high" as const
+      })
 
-    const totalKeyResults = objectives.reduce((sum, obj) => sum + obj.keyResults.length, 0)
-    const summary = `Generated ${objectives.length} strategic objectives with ${totalKeyResults} key results for ${businessContext.industry} business`
+      const totalKeyResults = objectives.reduce((sum, obj) => sum + obj.keyResults.length, 0)
+      const summary = `Generated ${objectives.length} strategic objectives with ${totalKeyResults} key results for ${businessContext.industry} business`
 
-    return {
-      objectives,
-      summary,
-      totalKeyResults
+      return {
+        objectives,
+        summary,
+        totalKeyResults
+      }
+    } catch (error) {
+      console.error('OKR Generation Error:', error)
+      throw new Error(`Failed to generate OKRs: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 }) 

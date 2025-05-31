@@ -2,8 +2,7 @@ import { google } from '@ai-sdk/google'
 import { Agent } from '@mastra/core/agent'
 import { Memory } from '@mastra/memory'
 import { LibSQLStore } from '@mastra/libsql'
-import { okrGenerationTool } from '../tools/task-generation-tool.js'
-import { delegationTool } from '../tools/delegation-tool.js'
+import { simpleOkrTool, simpleDelegationTool } from '../tools/simple-okr-tool'
 
 export const cosAgent = new Agent({
   name: 'Chief of Staff',
@@ -149,8 +148,8 @@ Always use the tools for OKR creation and delegation planning to ensure structur
 `,
   model: google('gemini-2.5-flash-preview-05-20'),
   tools: {
-    'generate-okrs': okrGenerationTool,
-    'create-delegation-plan': delegationTool
+    'generate-okrs': simpleOkrTool,
+    'create-delegation-plan': simpleDelegationTool
   },
   memory: new Memory({
     storage: new LibSQLStore({

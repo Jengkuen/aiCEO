@@ -1,10 +1,11 @@
 // Test script for COS agent - Strategic Orchestrator Role
-import { mastra } from './src/mastra/index.js'
+import { mastra } from './src/mastra/index.ts'
 
 async function testCOSStrategicRole() {
   try {
     console.log('🚀 Testing COS Agent - Strategic Orchestration & Delegation...\n')
     
+    // Test Scenario 1: Strategic Business Analysis with Delegation
     const businessIdea = `
 Sustainable food delivery service using electric bikes in San Francisco.
 Focus: Delivering healthy, locally-sourced meals to busy professionals in downtown offices.
@@ -18,56 +19,27 @@ Business Context:
 - Market Size: 200,000+ office workers in downtown SF
 - Competition: DoorDash, Uber Eats (but not focused on sustainability)
 
-Please provide strategic analysis with OKRs and delegation plan for C-suite specialists.
+As Chief of Staff, provide strategic analysis with OKRs and delegation plan for C-suite specialists. Focus on strategic coordination, not operational tasks.
 `
 
-    console.log('📋 Business Idea:', businessIdea)
+    console.log('📋 Test Scenario 1: Strategic Business Analysis')
+    console.log('Input:', businessIdea.substring(0, 100) + '...')
     console.log('\n⏳ COS Strategic Analysis - OKRs & Delegation Planning...\n')
 
-    const response = await mastra.agent('cosAgent').generate([
+    const response1 = await mastra.agent('cosAgent').generate([
       {
         role: 'user',
-        content: `As Chief of Staff, provide strategic analysis for this business idea. Create company OKRs and delegation plan for specialized C-suite agents (CTO, CMO, CFO, COO). Focus on strategic coordination, not operational tasks: ${businessIdea}`
+        content: businessIdea
       }
     ])
 
     console.log('🎯 COS Strategic Analysis:')
     console.log('='.repeat(100))
-    console.log(response.text)
+    console.log(response1.text)
     console.log('='.repeat(100))
 
-    // Test delegation-focused scenario
-    console.log('\n🔄 Testing Delegation Coordination Scenario...\n')
-    
-    const delegationScenario = `
-AI-powered personalized tutoring platform for high school students.
-Budget: $750,000 over 12 months
-Industry: Education Technology  
-Market: Parents seeking college prep support for students
-
-Strategic Priorities Identified:
-1. Technology Platform Development
-2. Content Creation & Curriculum Design  
-3. Student Acquisition & Brand Building
-4. Financial Sustainability & Funding
-
-As COS, create OKRs and delegate specialized work to appropriate C-suite agents.
-`
-
-    const response2 = await mastra.agent('cosAgent').generate([
-      {
-        role: 'user', 
-        content: `Strategic coordination request: Analyze this EdTech business and create delegation plan for C-suite specialists. Focus on OKRs and coordination, not detailed tasks: ${delegationScenario}`
-      }
-    ])
-
-    console.log('📚 COS Delegation Analysis:')
-    console.log('='.repeat(100))
-    console.log(response2.text)
-    console.log('='.repeat(100))
-
-    // Test CEO communication scenario
-    console.log('\n📊 Testing CEO Strategic Communication...\n')
+    // Test Scenario 2: Multi-Business Strategic Evaluation
+    console.log('\n📊 Test Scenario 2: CEO Strategic Decision Support')
     
     const ceoRequest = `
 CEO Request: "I have 3 business ideas and need strategic analysis to choose which one to pursue:
@@ -79,7 +51,10 @@ CEO Request: "I have 3 business ideas and need strategic analysis to choose whic
 As my Chief of Staff, provide strategic recommendation with OKRs for the top choice and delegation strategy for immediate action."
 `
 
-    const response3 = await mastra.agent('cosAgent').generate([
+    console.log('Input:', ceoRequest.substring(0, 100) + '...')
+    console.log('\n⏳ COS Strategic Decision Support...\n')
+
+    const response2 = await mastra.agent('cosAgent').generate([
       {
         role: 'user',
         content: ceoRequest
@@ -88,12 +63,59 @@ As my Chief of Staff, provide strategic recommendation with OKRs for the top cho
 
     console.log('💼 CEO Strategic Briefing:')
     console.log('='.repeat(100))
+    console.log(response2.text)
+    console.log('='.repeat(100))
+
+    // Test Scenario 3: Delegation Model Validation
+    console.log('\n🔄 Test Scenario 3: Delegation Model Validation')
+    
+    const delegationValidation = `
+Please explain your role as Chief of Staff and demonstrate your delegation approach:
+
+1. How do you differ from a task-generating agent?
+2. Show your strategic analysis process for an EdTech business
+3. Create OKRs and delegation plans without creating operational tasks
+4. Explain how specialists will receive context for task creation
+
+Business Example: AI-powered personalized tutoring platform for high school students preparing for college admissions.
+`
+
+    console.log('Input:', delegationValidation.substring(0, 100) + '...')
+    console.log('\n⏳ COS Delegation Model Explanation...\n')
+
+    const response3 = await mastra.agent('cosAgent').generate([
+      {
+        role: 'user',
+        content: delegationValidation
+      }
+    ])
+
+    console.log('🏗️ COS Delegation Model Validation:')
+    console.log('='.repeat(100))
     console.log(response3.text)
     console.log('='.repeat(100))
 
+    // Validation Summary
+    console.log('\n✅ VALIDATION SUMMARY:')
+    console.log('1. Strategic Analysis: Check for high-level business intelligence')
+    console.log('2. OKR Creation: Look for company-level objectives with measurable key results')
+    console.log('3. Delegation Planning: Verify specialist assignments with context and budgets')
+    console.log('4. NO Task Creation: Ensure COS does not create detailed operational tasks')
+    console.log('5. Executive Communication: Confirm CEO-level strategic language and insights')
+
   } catch (error) {
     console.error('❌ Error testing COS strategic role:', error)
+    console.log('\n🔧 Troubleshooting:')
+    console.log('1. Ensure Mastra dev server is running: npm run dev')
+    console.log('2. Check agent registration in src/mastra/index.ts')
+    console.log('3. Verify Google Gemini API key in .env')
+    console.log('4. Test individual agent in playground at localhost:4111')
   }
 }
+
+// Run validation tests
+console.log('🎯 COS Agent Validation Testing')
+console.log('📍 Testing corrected delegation model architecture')
+console.log('🎪 Expected: Strategic orchestration without operational task creation\n')
 
 testCOSStrategicRole() 
